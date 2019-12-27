@@ -1,5 +1,11 @@
  
 runner.Gatto.prototype = {
+		/*preload :function() {
+			blurPipeline = game.renderer.addPipeline('blur', new blurPipeline(game));
+			blurPipeline.setFloat1('resolution', game.config.width);
+			blurPipeline.setFloat1('radius', 5.0);
+			blurPipeline.setFloat2('dir',10.0,0.0);
+		},*/
 		create : function() {
 			this.cameras.main.setBackgroundColor(0x0c88c7);
 			// setting player animation
@@ -116,24 +122,33 @@ runner.Gatto.prototype = {
 		        this.player.setDepth(3);
 		        
 		     // set particle effect
-				this.particle=this.add.particles('gattoboyparticlesprite');
+		        /*var blurX = this.add.filter('BlurX');
+		        var blurY = this.add.filter('BlurY');*/
+				this.particle=this.add.particles('gattoboyBlur');
+				//this.particle.setPipeline('blur');
 				this.particle.setDepth(2);
 				this.particle.createEmitter({
-		            frame: 0,
+		            frame: {    
+		            	frames: [0,1,2],
+		                cycle: true
+		                },
 		            radial: false,
-		            x: 0,
+		            x: -5,
 		            y: 0,
-		            lifespan: 300,
+		            lifespan: 150,
 		            speedX: -300,//{ min: -150, max: -200 },
-		            quantity: 50,
+		            quantity: 40,
 		            gravityX:0,
 		            gravityY:0,
 		            follow: this.player,
-		            alpha:0.5,
+		            alpha:0.1,
 		            //scale: { start: 1, end: 0.1 , ease: 'Power2'},
-		            blendMode: 'ADD',
+		            blendMode: 'NORMAL',
 		        });
-		        
+				/*blurX.blur = 1;
+			    blurY.blur = 1;
+
+				this.particle.filters = [blurX, blurY];*/
 		        // the player is not dying
 		        this.dying = false;
 
@@ -143,7 +158,7 @@ runner.Gatto.prototype = {
 		            // play "run" animation if the player is on a platform
 		            if(!this.player.anims.isPlaying){
 		                this.player.anims.play("run");
-		                this.particle.emitters.getFirst().setFrame(0);
+		                this.particle.emitters.getFirst().setFrame({frames: [0,1,2],cycle: true});
 		            }
 		        }, null, this);
 
@@ -173,6 +188,7 @@ runner.Gatto.prototype = {
 		            this.player.setFrame(3);
 		            this.player.body.setVelocityY(-200);
 		            this.physics.world.removeCollider(this.platformCollider);
+		            this.particle.emitters.getFirst().stop();
 
 		        }, null, this);
 
@@ -298,7 +314,7 @@ runner.Gatto.prototype = {
 		            this.player.anims.stop();
 		            // ad jump animation
 		            this.player.setFrame(4);
-		            this.particle.emitters.getFirst().setFrame(1);
+		            this.particle.emitters.getFirst().setFrame(4);
 		        }
 		    },
 

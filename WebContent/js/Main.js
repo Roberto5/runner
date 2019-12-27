@@ -55,8 +55,8 @@ var lang;
 ratio=16/9;
 var gameConfig = {
         type: Phaser.AUTO,
-        width: 1334,
-        height: 750,
+        width: 900,
+        height: 500,
         backgroundColor: '#000',
 
         // physics settings

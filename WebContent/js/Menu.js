@@ -10,6 +10,7 @@ runner.Menu.prototype = {
     		this.menu[i]=this.add.sprite(0,0,shadowname[i]+'menu');
         	this.menu[i].x = this.game.width / 2;
     		this.menu[i].y = this.game.height / 2;
+    		this.menu[i].setScale(0.6);
     		this.menu[i].setInteractive(this.input.makePixelPerfect());
     		this.menu[i].inputEnabled = true;
             this.menu[i].over=false;
@@ -43,6 +44,7 @@ runner.Menu.prototype = {
         	this.shadow[i]=this.add.sprite(0,0,shadowname[i]+"shadow");
         	this.shadow[i].x = this.game.width / 2;
     		this.shadow[i].y = this.game.height / 2;
+    		this.shadow[i].setScale(0.6);
     		this.alpha=0;
         }
         // @todo this.tap unuse, mabie in the future will be use?

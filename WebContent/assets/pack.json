@@ -145,10 +145,20 @@
       "frameMax": -1,
       "margin": 0,
       "spacing": 0
+    },
+    {
+      "type": "spritesheet",
+      "key": "gattoboyBlur",
+      "url": "assets/img/gattoboyBlur.png",
+      "frameWidth": 64,
+      "frameHeight": 128,
+      "frameMax": -1,
+      "margin": 0,
+      "spacing": 0
     }
   ],
   "meta": {
-    "generated": "1576496060064",
+    "generated": "1577446311724",
     "app": "Phaser Editor",
     "url": "http://phasereditor.boniatillo.com",
     "version": "1.0",
