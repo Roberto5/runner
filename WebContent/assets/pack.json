@@ -1,0 +1,157 @@
+{
+  "boot": [{
+    "type": "image",
+    "key": "logo",
+    "url": "assets/img/logo.png",
+    "overwrite": false
+  }],
+  "preloader": [
+    {
+      "type": "spritesheet",
+      "key": "coin",
+      "url": "assets/img/coin.png",
+      "frameWidth": 20,
+      "frameHeight": 20,
+      "frameMax": -1,
+      "margin": 0,
+      "spacing": 0
+    },
+    {
+      "type": "spritesheet",
+      "key": "fire",
+      "url": "assets/img/fire.png",
+      "frameWidth": 40,
+      "frameHeight": 70,
+      "frameMax": -1,
+      "margin": 0,
+      "spacing": 0
+    },
+    {
+      "type": "spritesheet",
+      "key": "gattoboy",
+      "url": "assets/img/gattoboy.png",
+      "frameWidth": 64,
+      "frameHeight": 128,
+      "frameMax": -1,
+      "margin": 0,
+      "spacing": 0
+    },
+    {
+      "type": "spritesheet",
+      "key": "mountain",
+      "url": "assets/img/mountain.png",
+      "frameWidth": 512,
+      "frameHeight": 512,
+      "frameMax": -1,
+      "margin": 0,
+      "spacing": 0
+    },
+    {
+      "type": "image",
+      "key": "platform",
+      "url": "assets/img/platform.png",
+      "overwrite": false
+    },
+    {
+      "type": "image",
+      "key": "loader",
+      "url": "assets/img/loader.png",
+      "overwrite": false
+    },
+    {
+      "type": "image",
+      "key": "five",
+      "url": "assets/img/five.png",
+      "overwrite": false
+    },
+    {
+      "type": "image",
+      "key": "loader-frame",
+      "url": "assets/img/loader-frame.png",
+      "overwrite": false
+    },
+    {
+      "type": "image",
+      "key": "phaser",
+      "url": "assets/img/phaser.png",
+      "overwrite": false
+    },
+    {
+      "type": "image",
+      "key": "menu",
+      "url": "assets/img/menu.png",
+      "overwrite": false
+    },
+    {
+      "type": "image",
+      "key": "gecko",
+      "url": "assets/img/geckoshadow.png",
+      "overwrite": false
+    },
+    {
+      "type": "image",
+      "key": "gufettashadow",
+      "url": "assets/img/gufettashadow.png",
+      "overwrite": false
+    },
+    {
+      "type": "image",
+      "key": "gattoshadow",
+      "url": "assets/img/gattoshadow.png",
+      "overwrite": false
+    },
+    {
+      "type": "image",
+      "key": "geckoshadow",
+      "url": "assets/img/geckoshadow.png",
+      "overwrite": false
+    },
+    {
+      "type": "image",
+      "key": "gattomenu",
+      "url": "assets/img/gattomenu.png",
+      "overwrite": false
+    },
+    {
+      "type": "image",
+      "key": "geckomenu",
+      "url": "assets/img/geckomenu.png",
+      "overwrite": false
+    },
+    {
+      "type": "image",
+      "key": "gufettamenu",
+      "url": "assets/img/gufettamenu.png",
+      "overwrite": false
+    },
+    {
+      "type": "image",
+      "key": "gattoboyparticle",
+      "url": "assets/img/gattoboyparticle.png",
+      "overwrite": false
+    },
+    {
+      "type": "image",
+      "key": "gattoboyparticlejump",
+      "url": "assets/img/gattoboyparticlejump.png",
+      "overwrite": false
+    },
+    {
+      "type": "spritesheet",
+      "key": "gattoboyparticlesprite",
+      "url": "assets/img/gattoboyparticlesprite.png",
+      "frameWidth": 64,
+      "frameHeight": 128,
+      "frameMax": -1,
+      "margin": 0,
+      "spacing": 0
+    }
+  ],
+  "meta": {
+    "generated": "1576496060064",
+    "app": "Phaser Editor",
+    "url": "http://phasereditor.boniatillo.com",
+    "version": "1.0",
+    "copyright": "Arian Fornaris (c) 2015,2016"
+  }
+}
