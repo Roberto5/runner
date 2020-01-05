@@ -1,4 +1,4 @@
- 
+
 runner.Gatto.prototype = {
 		/*preload :function() {
 			blurPipeline = game.renderer.addPipeline('blur', new blurPipeline(game));
@@ -6,7 +6,9 @@ runner.Gatto.prototype = {
 			blurPipeline.setFloat1('radius', 5.0);
 			blurPipeline.setFloat2('dir',10.0,0.0);
 		},*/
+		ncoin : 0,
 		create : function() {
+			this.ncoin=0;
 			this.cameras.main.setBackgroundColor(0x0c88c7);
 			// setting player animation
 		    this.anims.create({
@@ -18,6 +20,16 @@ runner.Gatto.prototype = {
 		            frameRate: 15,
 		            repeat: -1
 		        });
+		    //turbo animation
+		    this.anims.create({
+	            key: "turbo",
+	            frames: this.anims.generateFrameNumbers("gattoboy", {
+	                start: 5,
+	                end: 7
+	            }),
+	            frameRate: 20,
+	            repeat: -1
+	        });
 
 		        // setting coin animation
 		        this.anims.create({
@@ -121,34 +133,20 @@ runner.Gatto.prototype = {
 		        this.player.setGravityY(gameOptions.playerGravity);
 		        this.player.setDepth(3);
 		        
-		     // set particle effect
-		        /*var blurX = this.add.filter('BlurX');
-		        var blurY = this.add.filter('BlurY');*/
-				this.particle=this.add.particles('gattoboyBlur');
-				//this.particle.setPipeline('blur');
-				this.particle.setDepth(2);
-				this.particle.createEmitter({
-		            frame: {    
-		            	frames: [0,1,2],
-		                cycle: true
-		                },
-		            radial: false,
-		            x: -5,
-		            y: 0,
-		            lifespan: 150,
-		            speedX: -300,//{ min: -150, max: -200 },
-		            quantity: 40,
-		            gravityX:0,
-		            gravityY:0,
-		            follow: this.player,
-		            alpha:0.1,
-		            //scale: { start: 1, end: 0.1 , ease: 'Power2'},
-		            blendMode: 'NORMAL',
-		        });
-				/*blurX.blur = 1;
-			    blurY.blur = 1;
-
-				this.particle.filters = [blurX, blurY];*/
+		     	// set trails
+				this.trails=new Array(4);
+				this.trailpos=[-30,0,30,50]
+				this.trail=false;
+				for (var j=0;j<this.trails.length;j++){
+					this.trails[j]=new Array(30);
+					for (var i=0;i<this.trails[j].length;i++) {
+						y=this.player.y+this.trailpos[j];
+						this.trails[j][i]=this.physics.add.sprite(gameOptions.playerStartPosition-10-2*i,y,'gattoboyparticle');
+						this.trails[j][i].setDepth(2);
+						this.trails[j][i].visible=false;
+					}
+				}
+				
 		        // the player is not dying
 		        this.dying = false;
 
@@ -158,13 +156,15 @@ runner.Gatto.prototype = {
 		            // play "run" animation if the player is on a platform
 		            if(!this.player.anims.isPlaying){
 		                this.player.anims.play("run");
-		                this.particle.emitters.getFirst().setFrame({frames: [0,1,2],cycle: true});
+						//@todo add turbo animation
 		            }
 		        }, null, this);
 
 		        // setting collisions between the player and the coin group
 		        this.physics.add.overlap(this.player, this.coinGroup, function(player, coin){
-
+					if (this.prevcoin!=coin) this.ncoin++;
+					this.prevcoin=coin;
+							console.log("ncoin ",this.ncoin);
 		            this.tweens.add({
 		                targets: coin,
 		                y: coin.y - 100,
@@ -175,6 +175,7 @@ runner.Gatto.prototype = {
 		                onComplete: function(){
 		                    this.coinGroup.killAndHide(coin);
 		                    this.coinGroup.remove(coin);
+							
 		                }
 		            });
 
@@ -182,13 +183,13 @@ runner.Gatto.prototype = {
 
 		        // setting collisions between the player and the fire group
 		        this.physics.add.overlap(this.player, this.fireGroup, function(player, fire){
-
+					
 		            this.dying = true;
 		            this.player.anims.stop();
 		            this.player.setFrame(3);
 		            this.player.body.setVelocityY(-200);
 		            this.physics.world.removeCollider(this.platformCollider);
-		            this.particle.emitters.getFirst().stop();
+		            //this.particle.emitters.getFirst().stop();
 
 		        }, null, this);
 
@@ -314,12 +315,32 @@ runner.Gatto.prototype = {
 		            this.player.anims.stop();
 		            // ad jump animation
 		            this.player.setFrame(4);
-		            this.particle.emitters.getFirst().setFrame(4);
 		        }
 		    },
 
 		    update : function(){
-
+				
+				//trails animation @todo set angle?
+				//this.player.angle++;
+				
+				for (var j=0;j<this.trails.length&&this.trail;j++)
+				{
+					var prev={x:this.player.x,y:this.player.y+this.trailpos[j]};
+				for(var i=0;i<this.trails[j].length;i++) {
+					this.trails[j][i].visible=true;
+					//this.trails[i].angle++;
+					temp={x:this.trails[j][i].x,y:this.trails[j][i].y};
+					a=Phaser.Math.Angle.Between(this.trails[j][i].x,this.trails[j][i].y,prev.x,prev.y);
+					//if (i==3) console.log('angolo '+i+': '+a);
+					a*= (180/Math.PI);
+					this.trails[j][i].angle=a;
+					this.trails[j][i].setScale(1+Math.abs(a)/90,1);
+					//this.trails[i].angle=Math.atan(Math.abs(prev.y-this.trails[i].y)/Math.abs(prev.x-this.trails[i].x));
+					if (this.trails[j][i].y-prev.y!=0) {this.trails[j][i].y=prev.y;}
+					//else if (this.trails[i].y-prev.y<0) this.trails[i].y++;
+					prev=temp;
+				}
+				}
 		        // game over
 		        if(this.player.y > game.config.height){
 		            this.scene.start("Gatto");

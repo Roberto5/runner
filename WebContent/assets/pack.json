@@ -48,6 +48,11 @@
     },
     {
       "type": "image",
+      "key": "gattoboyparticle",
+      "url": "assets/img/gattoboyparticle2.png"
+    },
+    {
+      "type": "image",
       "key": "platform",
       "url": "assets/img/platform.png",
       "overwrite": false
@@ -123,38 +128,6 @@
       "key": "gufettamenu",
       "url": "assets/img/gufettamenu.png",
       "overwrite": false
-    },
-    {
-      "type": "image",
-      "key": "gattoboyparticle",
-      "url": "assets/img/gattoboyparticle.png",
-      "overwrite": false
-    },
-    {
-      "type": "image",
-      "key": "gattoboyparticlejump",
-      "url": "assets/img/gattoboyparticlejump.png",
-      "overwrite": false
-    },
-    {
-      "type": "spritesheet",
-      "key": "gattoboyparticlesprite",
-      "url": "assets/img/gattoboyparticlesprite.png",
-      "frameWidth": 64,
-      "frameHeight": 128,
-      "frameMax": -1,
-      "margin": 0,
-      "spacing": 0
-    },
-    {
-      "type": "spritesheet",
-      "key": "gattoboyBlur",
-      "url": "assets/img/gattoboyBlur.png",
-      "frameWidth": 64,
-      "frameHeight": 128,
-      "frameMax": -1,
-      "margin": 0,
-      "spacing": 0
     }
   ],
   "meta": {

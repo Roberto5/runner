@@ -7,8 +7,8 @@ var runner = {
 		Gatto:function(){}
 };
 //global game options
-var gameOptions = {
-
+const gameOptions = {
+	turboReq : 10,
     // platform speed range, in pixels per second
     platformSpeedRange: [300, 300],
 
