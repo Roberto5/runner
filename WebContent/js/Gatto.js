@@ -11,6 +11,9 @@ runner.Gatto.prototype = {
 			this.ncoin=0;
 			this.cameras.main.setBackgroundColor(0x0c88c7);
 			// setting player animation
+			this.add.sprite(this.game.width-50,20,'coin').setDepth(4);
+			this.score=this.add.text(this.game.width-30,10,'0');
+			this.score.setDepth(4);
 		    this.anims.create({
 		            key: "run",
 		            frames: this.anims.generateFrameNumbers("gattoboy", {
@@ -164,7 +167,7 @@ runner.Gatto.prototype = {
 		        this.physics.add.overlap(this.player, this.coinGroup, function(player, coin){
 					if (this.prevcoin!=coin) this.ncoin++;
 					this.prevcoin=coin;
-							console.log("ncoin ",this.ncoin);
+		        	//console.log("ncoin ",this.ncoin);
 		            this.tweens.add({
 		                targets: coin,
 		                y: coin.y - 100,
@@ -175,7 +178,7 @@ runner.Gatto.prototype = {
 		                onComplete: function(){
 		                    this.coinGroup.killAndHide(coin);
 		                    this.coinGroup.remove(coin);
-							
+		                    this.prevcoin=null;
 		                }
 		            });
 
@@ -322,7 +325,7 @@ runner.Gatto.prototype = {
 				
 				//trails animation @todo set angle?
 				//this.player.angle++;
-				
+				this.score.setText(''+this.ncoin);
 				for (var j=0;j<this.trails.length&&this.trail;j++)
 				{
 					var prev={x:this.player.x,y:this.player.y+this.trailpos[j]};
