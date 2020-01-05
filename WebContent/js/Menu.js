@@ -1,8 +1,26 @@
 
 runner.Menu.prototype = {
+	isFullScreen:false,
     preload : function() {
     },
+    fullscreen : function () {
+    	if (!this.isFullScreen) {
+    		this.game.canvas[this.game.device.fullscreen.request]();
+    		//this.isFullScreen=true;
+    	}
+    	
+    },
     create: function(){
+    	this.add.sprite(20,20,'fullscreen').setInteractive().on('pointerdown',function(obj){
+    		if (this.game.scale.isFullscreen) {
+    	        this.game.scale.stopFullscreen();
+    	        // On stop fulll screen
+    	    } else {
+    	    	this.game.scale.startFullscreen();
+    	        // On start fulll screen
+    	    }
+    			//this.fullscreen();
+        },this);
     	this.menu=[];
     	this.shadow=[];
         shadowname=['gecko','gatto','gufetta'];

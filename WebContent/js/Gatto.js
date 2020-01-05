@@ -346,7 +346,7 @@ runner.Gatto.prototype = {
 				}
 		        // game over
 		        if(this.player.y > game.config.height){
-		            this.scene.start("Gatto");
+		            this.scene.start("Gatto");//add gameover screen
 		        }
 
 		        this.player.x = gameOptions.playerStartPosition;

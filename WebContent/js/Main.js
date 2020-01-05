@@ -74,7 +74,7 @@ var gameConfig = {
     
     //resize windows
     window.focus();
-    resize();
+    resize(true);
     window.addEventListener("resize", resize, false);
     
     game.scene.start('Boot');
@@ -100,20 +100,23 @@ var gameConfig = {
 
 
 
-function resize(){
-    var canvas = document.querySelector("canvas");
-    if (canvas==null) return;
-    var windowWidth = window.innerWidth;
-    var windowHeight = window.innerHeight;
-    var windowRatio = windowWidth / windowHeight;
-    var gameRatio = game.config.width / game.config.height;
-    if(windowRatio < gameRatio){
-        canvas.style.width = windowWidth + "px";
-        canvas.style.height = parseInt(windowWidth / gameRatio) + "px";
-    }
-    else{
-        canvas.style.width = parseInt(windowHeight * gameRatio) + "px";
-        canvas.style.height = windowHeight + "px";
-    }
-   
+function resize(first){
+	if (!first) {
+		if (!game.scale.isFullscreen) {
+			var canvas = document.querySelector("canvas");
+		    if (canvas==null) return;
+		    var windowWidth = window.innerWidth;
+		    var windowHeight = window.innerHeight;
+		    var windowRatio = windowWidth / windowHeight;
+		    var gameRatio = game.config.width / game.config.height;
+		    if(windowRatio < gameRatio){
+		        canvas.style.width = windowWidth + "px";
+		        canvas.style.height = parseInt(windowWidth / gameRatio) + "px";
+		    }
+		    else{
+		        canvas.style.width = parseInt(windowHeight * gameRatio) + "px";
+		        canvas.style.height = windowHeight + "px";
+		    }
+		}
+	}
 }
