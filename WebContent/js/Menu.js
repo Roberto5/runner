@@ -1,14 +1,13 @@
 
 runner.Menu.prototype = {
-	isFullScreen:false,
+		init:function(){
+			controllOrientation(Phaser.Scale.LANDSCAPE);
+			game.scale.on('orientationchange', function() {
+				controllOrientation(Phaser.Scale.LANDSCAPE);
+			}
+			,this);
+		},
     preload : function() {
-    },
-    fullscreen : function () {
-    	if (!this.isFullScreen) {
-    		this.game.canvas[this.game.device.fullscreen.request]();
-    		//this.isFullScreen=true;
-    	}
-    	
     },
     create: function(){
     	this.add.sprite(20,20,'fullscreen').setInteractive().on('pointerdown',function(obj){
@@ -19,61 +18,50 @@ runner.Menu.prototype = {
     	    	this.game.scale.startFullscreen();
     	        // On start fulll screen
     	    }
-    			//this.fullscreen();
         },this);
-    	this.menu=[];
+    	this.menu=this.add.sprite(this.game.width / 2,this.game.height / 2,'menu');
+    	this.menu.setScale(0.6);
+    	this.menu.setInteractive();
+    	this.menu.over=[false,false,false];
     	this.shadow=[];
         shadowname=['gecko','gatto','gufetta'];
-    	for (var i=0;i<3;i++) {
-    		this.menu[i]=this.add.sprite(0,0,shadowname[i]+'menu');
-        	this.menu[i].x = this.game.width / 2;
-    		this.menu[i].y = this.game.height / 2;
-    		this.menu[i].setScale(0.6);
-    		this.menu[i].setInteractive(this.input.makePixelPerfect());
-    		this.menu[i].inputEnabled = true;
-            this.menu[i].over=false;
-    	}
-    	this.menu[0].on('pointerdown',function(obj){
+    	
+    	//this.menu.on('pointerdown',function(obj,x,y){
 			//@todo play sound
+        //},this);
+		this.menu.on('pointermove',function(obj,x,y){
+			// over gecko
+			if ((x>0)&&(x<300)) this.menu.over=[true,false,false];
+			// over gattoboy
+			if ((x>300)&&(x<600)) this.menu.over=[false,true,false];
+			// over gufetta
+			if (x>600) this.menu.over=[false,false,true];
+			
         },this);
-		this.menu[0].on('pointerover',function(obj){
-			this.menu[0].over=true;
+        this.menu.on('pointerout',function(obj){
+        	this.menu.over=[false,false,false];
         },this);
-        this.menu[0].on('pointerout',function(obj){
-        	this.menu[0].over=false;
+        this.menu.on('pointerup',function(obj,x,y){
+        	// over gecko
+        	// over gattoboy
+			if ((x>300)&&(x<600)) {
+				this.game.scene.start('Gatto');
+				this.game.scene.stop('Menu');
+			}
+			// over gufetta
         },this);
-        this.menu[1].on('pointerup',function(obj){
-        	this.game.scene.start('Gatto');
-        	this.game.scene.stop('Menu');
-        },this);
-		this.menu[1].on('pointerover',function(obj){
-			this.menu[1].over=true;
-        },this);
-        this.menu[1].on('pointerout',function(obj){
-        	this.menu[1].over=false;
-        },this);
-		this.menu[2].on('pointerover',function(obj){
-			this.menu[2].over=true;
-        },this);
-        this.menu[2].on('pointerout',function(obj){
-        	this.menu[2].over=false;
-        },this);
+		
         for (var i=0;i<3;i++) {
-        	this.shadow[i]=this.add.sprite(0,0,shadowname[i]+"shadow");
-        	this.shadow[i].x = this.game.width / 2;
-    		this.shadow[i].y = this.game.height / 2;
+        	this.shadow[i]=this.add.sprite(this.game.width / 2,this.game.height / 2,shadowname[i]+"shadow");
     		this.shadow[i].setScale(0.6);
     		this.alpha=0;
         }
-        // @todo this.tap unuse, mabie in the future will be use?
-        /*this.input.on('pointerdown',function(v){this.tap=true;},this);
-        this.input.on('pointerdown',function(v){this.tap=false;},this);*/
     },
     update: function() {
     	//hover effect
-    	for (var i=0;i<this.menu.length;i++)
+    	for (var i=0;i<this.menu.over.length;i++)
     	{
-    		if (this.menu[i].over) {
+    		if (this.menu.over[i]) {
         		this.shadow[i].alpha=1;
         	}
         	else {

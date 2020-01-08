@@ -8,6 +8,8 @@ runner.Boot.prototype = {
        resize();
    },
   create: function(){
+	  window.screen.orientation.lock('landscape')
+	  this.game.scale.lockOrientation='landscape';
        this.game.scene.backgroundColor = '#000';
        this.game.height=this.game.canvas.height;
        this.game.width=this.game.canvas.width;

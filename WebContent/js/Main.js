@@ -8,7 +8,8 @@ var runner = {
 };
 //global game options
 const gameOptions = {
-	turboReq : 10,
+	turboReq : 5,
+	turboDuration:10,
     // platform speed range, in pixels per second
     platformSpeedRange: [300, 300],
 
@@ -17,7 +18,7 @@ const gameOptions = {
 
     // spawn range, how far should be the rightmost platform from the right edge
     // before next platform spawns, in pixels
-    spawnRange: [80, 300],
+    spawnRange: [80, 250],
 
     // platform width range, in pixels
     platformSizeRange: [90, 300],
@@ -44,7 +45,7 @@ const gameOptions = {
     jumps: 2,
 
     // % of probability a coin appears on the platform
-    coinPercent: 25,
+    coinPercent: 50,
 
     // % of probability a fire appears on the platform
     firePercent: 25
@@ -74,9 +75,8 @@ var gameConfig = {
     
     //resize windows
     window.focus();
-    resize(true);
+    resize('firstBoot');
     window.addEventListener("resize", resize, false);
-    
     game.scene.start('Boot');
     
     //back button handle
@@ -88,11 +88,9 @@ var gameConfig = {
 
     	if (game.scene.isActive('Gatto')) {	
     		if (confirm(lang.returnMenu)) {
-    			saveGame(game.data);
     			game.scene.stop('Gatto');
     			game.scene.start('Menu');
     		}
-			
     	}
     	if (!game.scene.isActive('Menu')) window.history.pushState({}, '');
     });
@@ -101,8 +99,8 @@ var gameConfig = {
 
 
 function resize(first){
-	if (!first) {
-		if (!game.scale.isFullscreen) {
+	if (first!='firstBoot') {
+		//if (!game.scale.isFullscreen) {
 			var canvas = document.querySelector("canvas");
 		    if (canvas==null) return;
 		    var windowWidth = window.innerWidth;
@@ -110,13 +108,19 @@ function resize(first){
 		    var windowRatio = windowWidth / windowHeight;
 		    var gameRatio = game.config.width / game.config.height;
 		    if(windowRatio < gameRatio){
-		        canvas.style.width = windowWidth + "px";
-		        canvas.style.height = parseInt(windowWidth / gameRatio) + "px";
+		    	//game.scale.setGameSize(windowWidth,parseInt(windowWidth / gameRatio));
+		        canvas.style.width = windowWidth+'px';
+		        canvas.style.height = parseInt(windowWidth / gameRatio)+'px';
 		    }
 		    else{
-		        canvas.style.width = parseInt(windowHeight * gameRatio) + "px";
-		        canvas.style.height = windowHeight + "px";
+		    	//game.scale.setGameSize( parseInt(windowHeight * gameRatio),windowHeight);
+		    	canvas.style.width = parseInt(windowHeight * gameRatio)+'px';
+		        canvas.style.height = windowHeight+'px';
 		    }
-		}
+		/*}
+		else {
+			canvas.style.width='';
+			canvas.style.heigh='';
+		}*/
 	}
 }

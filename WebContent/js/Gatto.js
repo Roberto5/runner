@@ -1,19 +1,47 @@
 
 runner.Gatto.prototype = {
-		/*preload :function() {
-			blurPipeline = game.renderer.addPipeline('blur', new blurPipeline(game));
-			blurPipeline.setFloat1('resolution', game.config.width);
-			blurPipeline.setFloat1('radius', 5.0);
-			blurPipeline.setFloat2('dir',10.0,0.0);
-		},*/
 		ncoin : 0,
+		Score : 0,
+		gameover : false,
+		turbo: false,
+		turboUsed:0,
+		lastTimeTurbo:0,
 		create : function() {
+			this.game.scale.lockOrientation='landscape';
+			this.add.sprite(20,20,'fullscreen').setInteractive().on('pointerdown',function(obj){
+	    		if (this.game.scale.isFullscreen) {
+	    	        this.game.scale.stopFullscreen();
+	    	        // On stop fulll screen
+	    	    } else {
+	    	    	this.game.scale.startFullscreen();
+	    	        // On start fulll screen
+	    	    }
+	        },this);
+			this.mid={x:this.game.width/2,y:this.game.height/2};
+			var l=200;
+			var h=100;
+			EndFrame=this.add.graphics();
+			EndFrame.setInteractive();
+			EndFrame.fillStyle(0x000000, 1);
+			EndFrame.fillRect(this.game.width/2-l/2,this.game.height/2-h/2,l, h);
+			
+			/*
+			 * EndFrame.on('pointerdown',function(event){
+			 * this.scene.start("Gatto"); },this);
+			 */
+			text=this.add.text(this.mid.x,this.mid.y,'Game Over',{color:'#ffffff'});
+			text.setOrigin(0.5);
+			this.endGroup=this.add.group();
+			this.endGroup.add(EndFrame).add(text);
+			this.endGroup.setVisible(false);
+			this.endGroup.setDepth(4);
+			
 			this.ncoin=0;
 			this.cameras.main.setBackgroundColor(0x0c88c7);
 			// setting player animation
 			this.add.sprite(this.game.width-50,20,'coin').setDepth(4);
-			this.score=this.add.text(this.game.width-30,10,'0');
-			this.score.setDepth(4);
+			this.coinCounter=this.add.text(this.game.width-30,10,'0');
+			this.coinCounter.setDepth(4);
 		    this.anims.create({
 		            key: "run",
 		            frames: this.anims.generateFrameNumbers("gattoboy", {
@@ -23,7 +51,7 @@ runner.Gatto.prototype = {
 		            frameRate: 15,
 		            repeat: -1
 		        });
-		    //turbo animation
+		    // turbo animation
 		    this.anims.create({
 	            key: "turbo",
 	            frames: this.anims.generateFrameNumbers("gattoboy", {
@@ -149,6 +177,9 @@ runner.Gatto.prototype = {
 						this.trails[j][i].visible=false;
 					}
 				}
+				this.trailsGroup=this.add.group();
+				for (var j=0;j<this.trails.length;j++)
+				this.trailsGroup.addMultiple(this.trails[j]);
 				
 		        // the player is not dying
 		        this.dying = false;
@@ -158,29 +189,31 @@ runner.Gatto.prototype = {
 
 		            // play "run" animation if the player is on a platform
 		            if(!this.player.anims.isPlaying){
-		                this.player.anims.play("run");
-						//@todo add turbo animation
+		            	if (this.turbo) this.player.anims.play('turbo');
+		            	else this.player.anims.play("run");
 		            }
 		        }, null, this);
 
 		        // setting collisions between the player and the coin group
 		        this.physics.add.overlap(this.player, this.coinGroup, function(player, coin){
-					if (this.prevcoin!=coin) this.ncoin++;
-					this.prevcoin=coin;
-		        	//console.log("ncoin ",this.ncoin);
-		            this.tweens.add({
-		                targets: coin,
-		                y: coin.y - 100,
-		                alpha: 0,
-		                duration: 800,
-		                ease: "Cubic.easeOut",
-		                callbackScope: this,
-		                onComplete: function(){
-		                    this.coinGroup.killAndHide(coin);
-		                    this.coinGroup.remove(coin);
-		                    this.prevcoin=null;
-		                }
-		            });
+					if (this.prevcoin!=coin) {
+						this.ncoin++;
+						this.prevcoin=coin;
+						this.tweens.add({
+			                targets: coin,
+			                y: coin.y - 100,
+			                alpha: 0,
+			                duration: 800,
+			                ease: "Cubic.easeOut",
+			                callbackScope: this,
+			                onComplete: function(){
+			                    this.coinGroup.killAndHide(coin);
+			                    this.coinGroup.remove(coin);
+			                    this.prevcoin=null;
+			                }
+			            });
+					}
+		        	
 
 		        }, null, this);
 
@@ -192,7 +225,7 @@ runner.Gatto.prototype = {
 		            this.player.setFrame(3);
 		            this.player.body.setVelocityY(-200);
 		            this.physics.world.removeCollider(this.platformCollider);
-		            //this.particle.emitters.getFirst().stop();
+		            // this.particle.emitters.getFirst().stop();
 
 		        }, null, this);
 
@@ -203,7 +236,34 @@ runner.Gatto.prototype = {
 		            this.jump.call(this,obj);
 		        }, this);
 		    },
-
+		    setObjVel : function(v,obj) {
+		    	if ((obj=="all")||(obj=="mointains")) 
+		    		this.mountainGroup.getChildren().forEach(function(child,index){
+		    			child.body.setVelocityX(v);
+		    		});
+		    	
+		    	if ((obj!="mointains")||(obj=="all")) {
+		    		this.platformGroup.getChildren().forEach(function(child,index){
+			    		child.body.setVelocityX(v);
+			    	});
+		    		this.platformPool.getChildren().forEach(function(child,index){
+			    		child.body.setVelocityX(v);
+			    	});
+			    	this.coinGroup.getChildren().forEach(function(child,index){
+			    		child.body.setVelocityX(v);
+			    	});
+			    	this.coinPool.getChildren().forEach(function(child,index){
+			    		child.body.setVelocityX(v);
+			    	});
+			    	this.fireGroup.getChildren().forEach(function(child,index){
+			    		child.body.setVelocityX(v);
+			    	});
+			    	this.firePool.getChildren().forEach(function(child,index){
+			    		child.body.setVelocityX(v);
+			    	});
+		    	}
+		    	
+		    },
 		    // adding mountains
 		    addMountains : function(){
 		        let rightmostMountain = this.getRightmostMountain();
@@ -307,7 +367,9 @@ runner.Gatto.prototype = {
 			// as there are jumps left and the first jump was on the ground
 		    // and obviously if the player is not dying
 		    jump : function(){
-		        if((!this.dying) && (this.player.body.touching.down || (this.playerJumps > 0 && this.playerJumps < gameOptions.jumps))){
+		    	var maxjump=gameOptions.jumps;
+		    	if (this.turbo) maxjump*=2;
+		        if((!this.dying) && (this.player.body.touching.down || (this.playerJumps > 0 && this.playerJumps < maxjump))){
 		            if(this.player.body.touching.down){
 		                this.playerJumps = 0;
 		            }
@@ -317,36 +379,46 @@ runner.Gatto.prototype = {
 		            // stops animation
 		            this.player.anims.stop();
 		            // ad jump animation
-		            this.player.setFrame(4);
+		            if (this.turbo) this.player.setFrame(9);
+		            else this.player.setFrame(4);
+		        }
+		        if (this.gameover) {
+		        	this.scene.start("Gatto");
+		        	this.gameover=false;
 		        }
 		    },
 
 		    update : function(){
 				
-				//trails animation @todo set angle?
-				//this.player.angle++;
-				this.score.setText(''+this.ncoin);
+				// trails animation @FIXME rendere invisibile le scie!!
+				this.coinCounter.setText(''+this.ncoin);
+				this.trailsGroup.setVisible(this.turbo);
+				/*if (!this.trail) {
+					for (var j=0;j<this.trails.length&&this.trail;j++)
+						for(var i=0;i<this.trails[j].length;i++)
+							this.trails[j][i].visible=false;
+				}*/
 				for (var j=0;j<this.trails.length&&this.trail;j++)
 				{
 					var prev={x:this.player.x,y:this.player.y+this.trailpos[j]};
 				for(var i=0;i<this.trails[j].length;i++) {
 					this.trails[j][i].visible=true;
-					//this.trails[i].angle++;
 					temp={x:this.trails[j][i].x,y:this.trails[j][i].y};
 					a=Phaser.Math.Angle.Between(this.trails[j][i].x,this.trails[j][i].y,prev.x,prev.y);
-					//if (i==3) console.log('angolo '+i+': '+a);
 					a*= (180/Math.PI);
 					this.trails[j][i].angle=a;
 					this.trails[j][i].setScale(1+Math.abs(a)/90,1);
-					//this.trails[i].angle=Math.atan(Math.abs(prev.y-this.trails[i].y)/Math.abs(prev.x-this.trails[i].x));
 					if (this.trails[j][i].y-prev.y!=0) {this.trails[j][i].y=prev.y;}
-					//else if (this.trails[i].y-prev.y<0) this.trails[i].y++;
 					prev=temp;
 				}
 				}
 		        // game over
 		        if(this.player.y > game.config.height){
-		            this.scene.start("Gatto");//add gameover screen
+		        	this.endGroup.setVisible(true);
+		        	this.gameover=true;
+		        	this.setObjVel(0,"all");
+		        	this.turboUsed=0;
+		        	this.turbo=false;
 		        }
 
 		        this.player.x = gameOptions.playerStartPosition;
@@ -404,6 +476,23 @@ runner.Gatto.prototype = {
 		            let maxPlatformHeight = game.config.height * gameOptions.platformVerticalLimit[1];
 		            let nextPlatformHeight = Phaser.Math.Clamp(nextPlatformGap, minPlatformHeight, maxPlatformHeight);
 		            this.addPlatform(nextPlatformWidth, game.config.width + nextPlatformWidth / 2, nextPlatformHeight);
+		        }
+		        // active turbo
+		        // @TODO play sound
+		        // @TODO auto turbo or turbo button?
+		        // now use auto turbo
+		        if ((this.ncoin>=gameOptions.turboReq+this.turboUsed)&&(!this.gameover)) {
+		        	this.turboUsed+=gameOptions.turboReq;
+		        	this.trail=true;
+		        	this.setObjVel(-gameOptions.platformSpeedRange[0]*2);
+		        	if (this.turbo) this.lastTimeTurbo+=gameOptions.turboDuration*1000;
+		        	else this.lastTimeTurbo=this.time.now;
+		        	this.turbo=true;
+		        }
+		        if ((this.time.now>=this.lastTimeTurbo+gameOptions.turboDuration*1000)&&this.turbo) {
+		        	this.turbo=false;
+		        	this.trail=false;
+		        	this.setObjVel(-gameOptions.platformSpeedRange[0]);
 		        }
 		    }
 		}

@@ -90,3 +90,11 @@ var blurPipeline = new Phaser.Class({
         }
 
 });
+
+function controllOrientation(orientation) {
+	if ((this.game.scale.orientation!=orientation)&&!this.game.device.os.desktop) {
+		document.getElementById('turn').style='display:block';
+	}
+	else document.getElementById('turn').style='display:none';
+	resize();
+}
