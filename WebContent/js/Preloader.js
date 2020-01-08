@@ -33,12 +33,13 @@ runner.Preloader.prototype = {
 				this.load.spritesheet(file);break;
 			}
 		}
+		this.load.audio('gattoTurbo', 'assets/audio/gatto.mp3');
 		//this.load.pack('preloader','assets/pack.json'); not work
 		/* for test progress bar*/
 		/*this.load.setCORS('anonymous');
 		this.load.setCORS('Anonymous');
 		this.load.setCORS(true);
-		this.load.audio('prova', 'assets/audio/prova.mp3');
+		
 		this.load.image('prova', 'https://cdn.crunchify.com/wp-content/uploads/2016/04/How-to-fix-Access-Control-Allow-Origin-issue-for-your-HTTPS-enabled-WordPress-site.png?q=' + Math.random(100));
 		this.load.image('prova2', 'https://cdn.crunchify.com/wp-content/uploads/2016/04/How-to-fix-Access-Control-Allow-Origin-issue-for-your-HTTPS-enabled-WordPress-site.png?q=' + Math.random(100));
 		 

@@ -486,6 +486,10 @@ runner.Gatto.prototype = {
 		        // @TODO auto turbo or turbo button?
 		        // now use auto turbo
 		        if ((this.ncoin>=gameOptions.turboReq+this.turboUsed)&&(!this.gameover)) {
+		        	if (!this.turbo) {
+		        		//play sound
+		        		this.sound.play('gattoTurbo')
+		        	}
 		        	this.turboUsed+=gameOptions.turboReq;
 		        	this.trail=true;
 		        	this.setObjVel(-gameOptions.platformSpeedRange[0]*2);
