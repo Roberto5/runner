@@ -26,6 +26,16 @@
       "margin": 0,
       "spacing": 0
     },
+	{
+      "type": "spritesheet",
+      "key": "skyline",
+      "url": "assets/img/skyline.png",
+      "frameWidth": 512,
+      "frameHeight": 512,
+      "frameMax": -1,
+      "margin": 0,
+      "spacing": 0
+    },
     {
       "type": "spritesheet",
       "key": "gattoboy",
@@ -62,6 +72,12 @@
       "type": "image",
       "key": "loader",
       "url": "assets/img/loader.png",
+      "overwrite": false
+    },
+	{
+      "type": "image",
+      "key": "moon",
+      "url": "assets/img/moon.png",
       "overwrite": false
     },
     {

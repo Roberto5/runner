@@ -37,11 +37,14 @@ runner.Gatto.prototype = {
 			this.endGroup.setDepth(4);
 			
 			this.ncoin=0;
-			this.cameras.main.setBackgroundColor(0x0c88c7);
-			// setting player animation
+			this.cameras.main.setBackgroundColor('#191970');
+			
 			this.add.sprite(this.game.width-50,20,'coin').setDepth(4);
 			this.coinCounter=this.add.text(this.game.width-30,10,'0');
 			this.coinCounter.setDepth(4);
+			//moon
+			this.add.sprite(100,10,'moon').setDepth(0).setOrigin(0).setScale(0.5);
+			// setting player animation
 		    this.anims.create({
 		            key: "run",
 		            frames: this.anims.generateFrameNumbers("gattoboy", {
@@ -268,14 +271,15 @@ runner.Gatto.prototype = {
 		    addMountains : function(){
 		        let rightmostMountain = this.getRightmostMountain();
 		        if(rightmostMountain < game.config.width * 2){
-		            let mountain = this.physics.add.sprite(rightmostMountain + Phaser.Math.Between(100, 350), game.config.height + Phaser.Math.Between(0, 100), "mountain");
+		            let mountain = this.physics.add.sprite(rightmostMountain + Phaser.Math.Between(100, 350), game.config.height + Phaser.Math.Between(0, 100), "skyline");
+		            mountain.setScale(0.8);
 		            mountain.setOrigin(0.5, 1);
 		            mountain.body.setVelocityX(gameOptions.mountainSpeed * -1);
 		            this.mountainGroup.add(mountain);
 		            if(Phaser.Math.Between(0, 1)){
 		                mountain.setDepth(1);
 		            }
-		            mountain.setFrame(Phaser.Math.Between(0, 3));
+		            mountain.setFrame(Phaser.Math.Between(0, 5));
 		            this.addMountains();
 		        }
 		    },
