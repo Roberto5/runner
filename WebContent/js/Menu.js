@@ -1,13 +1,8 @@
 
 runner.Menu.prototype = {
-		init:function(){
-			controllOrientation(Phaser.Scale.LANDSCAPE);
-			game.scale.on('orientationchange', function() {
-				controllOrientation(Phaser.Scale.LANDSCAPE);
-			}
-			,this);
-		},
-    preload : function() {
+		
+    init : function() {
+    	PrefOrientation=Phaser.Scale.LANDSCAPE;
     },
     create: function(){
     	this.add.sprite(20,20,'fullscreen').setInteractive().on('pointerdown',function(obj){
@@ -49,6 +44,10 @@ runner.Menu.prototype = {
 				this.game.scene.stop('Menu');
 			}
 			// over gufetta
+			if (x>600) {
+				this.game.scene.start('Gufetta');
+				this.game.scene.stop('Menu');
+			}
         },this);
 		
         for (var i=0;i<3;i++) {

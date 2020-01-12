@@ -2,6 +2,13 @@
 // prepare the asset for loader screeen
 runner.Boot.prototype = Phaser.Scene.prototype;
 runner.Boot.prototype = {
+		init:function(){
+			controllOrientation(PrefOrientation);
+			game.scale.on('orientationchange', function() {
+				controllOrientation(PrefOrientation);
+			}
+			,this);
+		},
    preload: function() {
 	   this.load.json('pack', 'assets/pack.json'); //this not work
 	   this.load.image('logo','assets/img/logo.png');//this work

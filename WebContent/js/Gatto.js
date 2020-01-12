@@ -6,8 +6,12 @@ runner.Gatto.prototype = {
 		turbo: false,
 		turboUsed:0,
 		lastTimeTurbo:0,
+		init: function() {
+			PrefOrientation=Phaser.Scale.LANDSCAPE;
+		},
 		create : function() {
 			this.game.scale.lockOrientation='landscape';
+			//full screen button
 			this.add.sprite(20,20,'fullscreen').setInteractive().on('pointerdown',function(obj){
 	    		if (this.game.scale.isFullscreen) {
 	    	        this.game.scale.stopFullscreen();
@@ -18,6 +22,7 @@ runner.Gatto.prototype = {
 	    	    }
 	        },this);
 			this.mid={x:this.game.width/2,y:this.game.height/2};
+			// end frame
 			var l=200;
 			var h=100;
 			EndFrame=this.add.graphics();

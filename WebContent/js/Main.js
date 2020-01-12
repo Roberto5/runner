@@ -4,8 +4,10 @@ var runner = {
 		Preloader:function(){},
 		Logo:function(){},
 		Menu:function(){},
-		Gatto:function(){}
+		Gatto:function(){},
+		Gufetta:function(){}
 };
+var PrefOrientation=Phaser.Scale.LANDSCAPE;
 //global game options
 const gameOptions = {
 	turboReq : 5,
@@ -73,6 +75,7 @@ var gameConfig = {
     game.scene.add('Logo',runner.Logo);
     game.scene.add('Menu',runner.Menu);
     game.scene.add('Gatto', runner.Gatto);
+    game.scene.add('Gufetta', runner.Gufetta);
     
     //resize windows
     window.focus();
@@ -90,6 +93,12 @@ var gameConfig = {
     	if (game.scene.isActive('Gatto')) {	
     		if (confirm(lang.returnMenu)) {
     			game.scene.stop('Gatto');
+    			game.scene.start('Menu');
+    		}
+    	}
+    	if (game.scene.isActive('Gufetta')) {	
+    		if (confirm(lang.returnMenu)) {
+    			game.scene.stop('Gufetta');
     			game.scene.start('Menu');
     		}
     	}
