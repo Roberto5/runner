@@ -228,8 +228,6 @@ runner.Gatto.prototype = {
 		            this.player.setFrame(3);
 		            this.player.body.setVelocityY(-200);
 		            this.physics.world.removeCollider(this.platformCollider);
-		            // this.particle.emitters.getFirst().stop();
-
 		        }, null, this);
 
 		        // checking for input
@@ -394,27 +392,22 @@ runner.Gatto.prototype = {
 
 		    update : function(){
 				
-				// trails animation @FIXME rendere invisibile le scie!!
+				
 				this.coinCounter.setText(''+this.ncoin);
 				this.trailsGroup.setVisible(this.turbo);
-				/*if (!this.trail) {
-					for (var j=0;j<this.trails.length&&this.trail;j++)
-						for(var i=0;i<this.trails[j].length;i++)
-							this.trails[j][i].visible=false;
-				}*/
 				for (var j=0;j<this.trails.length&&this.trail;j++)
 				{
 					var prev={x:this.player.x,y:this.player.y+this.trailpos[j]};
-				for(var i=0;i<this.trails[j].length;i++) {
-					this.trails[j][i].visible=true;
-					temp={x:this.trails[j][i].x,y:this.trails[j][i].y};
-					a=Phaser.Math.Angle.Between(this.trails[j][i].x,this.trails[j][i].y,prev.x,prev.y);
-					a*= (180/Math.PI);
-					this.trails[j][i].angle=a;
-					this.trails[j][i].setScale(1+Math.abs(a)/90,1);
-					if (this.trails[j][i].y-prev.y!=0) {this.trails[j][i].y=prev.y;}
-					prev=temp;
-				}
+					for(var i=0;i<this.trails[j].length;i++) {
+						this.trails[j][i].visible=true;
+						temp={x:this.trails[j][i].x,y:this.trails[j][i].y};
+						a=Phaser.Math.Angle.Between(this.trails[j][i].x,this.trails[j][i].y,prev.x,prev.y);
+						a*= (180/Math.PI);
+						this.trails[j][i].angle=a;
+						this.trails[j][i].setScale(1+Math.abs(a)/90,1);
+						if (this.trails[j][i].y-prev.y!=0) {this.trails[j][i].y=prev.y;}
+						prev=temp;
+					}
 				}
 		        // game over
 		        if(this.player.y > game.config.height){
@@ -482,7 +475,6 @@ runner.Gatto.prototype = {
 		            this.addPlatform(nextPlatformWidth, game.config.width + nextPlatformWidth / 2, nextPlatformHeight);
 		        }
 		        // active turbo
-		        // @TODO play sound
 		        // @TODO auto turbo or turbo button?
 		        // now use auto turbo
 		        if ((this.ncoin>=gameOptions.turboReq+this.turboUsed)&&(!this.gameover)) {
@@ -491,6 +483,7 @@ runner.Gatto.prototype = {
 		        		this.sound.play('gattoTurbo')
 		        	}
 		        	this.turboUsed+=gameOptions.turboReq;
+		        	//@todo rindondante?
 		        	this.trail=true;
 		        	this.setObjVel(-gameOptions.platformSpeedRange[0]*2);
 		        	if (this.turbo) this.lastTimeTurbo+=gameOptions.turboDuration*1000;
