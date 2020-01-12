@@ -29,10 +29,11 @@ runner.Gatto.prototype = {
 			 * EndFrame.on('pointerdown',function(event){
 			 * this.scene.start("Gatto"); },this);
 			 */
-			text=this.add.text(this.mid.x,this.mid.y,'Game Over',{color:'#ffffff'});
+			text=this.add.text(this.mid.x,this.mid.y-20,'Game Over',{color:'#ffffff'});
 			text.setOrigin(0.5);
+			this.finalScoreText=this.add.text(this.mid.x,this.mid.y+10,'Score :',{color:'#ffffff'}).setOrigin(0.5);
 			this.endGroup=this.add.group();
-			this.endGroup.add(EndFrame).add(text);
+			this.endGroup.add(EndFrame).add(text).add(this.finalScoreText);
 			this.endGroup.setVisible(false);
 			this.endGroup.setDepth(4);
 			
@@ -42,6 +43,8 @@ runner.Gatto.prototype = {
 			this.add.sprite(this.game.width-50,20,'coin').setDepth(4);
 			this.coinCounter=this.add.text(this.game.width-30,10,'0');
 			this.coinCounter.setDepth(4);
+			this.ScoreText=this.add.text(this.game.width-200,10,'Score: 0').setDepth(4);
+			this.Score=this.time.now;
 			//moon
 			this.add.sprite(100,10,'moon').setDepth(0).setOrigin(0).setScale(0.5);
 			// setting player animation
@@ -169,8 +172,7 @@ runner.Gatto.prototype = {
 		        
 		     	// set trails
 				this.trails=new Array(4);
-				this.trailpos=[-30,0,30,50]
-				this.trail=false;
+				this.trailpos=[-30,0,30,50];
 				for (var j=0;j<this.trails.length;j++){
 					this.trails[j]=new Array(30);
 					for (var i=0;i<this.trails[j].length;i++) {
@@ -201,6 +203,7 @@ runner.Gatto.prototype = {
 		        this.physics.add.overlap(this.player, this.coinGroup, function(player, coin){
 					if (this.prevcoin!=coin) {
 						this.ncoin++;
+						this.Score-=gameOptions.pointForCoin;
 						this.prevcoin=coin;
 						this.tweens.add({
 			                targets: coin,
@@ -387,15 +390,16 @@ runner.Gatto.prototype = {
 		        if (this.gameover) {
 		        	this.scene.start("Gatto");
 		        	this.gameover=false;
+		        	this.Score=this.time.now;
+		        	this.finalScoreSet=false;
 		        }
 		    },
 
 		    update : function(){
-				
-				
+		    	if (!this.gameover) this.ScoreText.setText('Score: '+(this.time.now-this.Score));
 				this.coinCounter.setText(''+this.ncoin);
 				this.trailsGroup.setVisible(this.turbo);
-				for (var j=0;j<this.trails.length&&this.trail;j++)
+				for (var j=0;j<this.trails.length&&this.turbo;j++)
 				{
 					var prev={x:this.player.x,y:this.player.y+this.trailpos[j]};
 					for(var i=0;i<this.trails[j].length;i++) {
@@ -416,6 +420,15 @@ runner.Gatto.prototype = {
 		        	this.setObjVel(0,"all");
 		        	this.turboUsed=0;
 		        	this.turbo=false;
+		        	if (!this.finalScoreSet) {
+		        		this.finalScoreSet=true;
+		        		this.finalScore=(this.time.now-this.Score);
+		        		
+		        		if (localStorage.getItem('Score')<this.finalScore) {
+		        			localStorage.setItem('Score',this.finalScore);
+		        		}
+		        		this.finalScoreText.setText('Score: '+this.finalScore+'\nrecord: '+localStorage.getItem('Score')).setDepth(5);
+		        	}
 		        }
 
 		        this.player.x = gameOptions.playerStartPosition;
@@ -483,8 +496,6 @@ runner.Gatto.prototype = {
 		        		this.sound.play('gattoTurbo')
 		        	}
 		        	this.turboUsed+=gameOptions.turboReq;
-		        	//@todo rindondante?
-		        	this.trail=true;
 		        	this.setObjVel(-gameOptions.platformSpeedRange[0]*2);
 		        	if (this.turbo) this.lastTimeTurbo+=gameOptions.turboDuration*1000;
 		        	else this.lastTimeTurbo=this.time.now;
@@ -492,7 +503,6 @@ runner.Gatto.prototype = {
 		        }
 		        if ((this.time.now>=this.lastTimeTurbo+gameOptions.turboDuration*1000)&&this.turbo) {
 		        	this.turbo=false;
-		        	this.trail=false;
 		        	this.setObjVel(-gameOptions.platformSpeedRange[0]);
 		        }
 		    }

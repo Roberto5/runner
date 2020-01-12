@@ -10,6 +10,7 @@ var runner = {
 const gameOptions = {
 	turboReq : 5,
 	turboDuration:10,
+	pointForCoin:1000,
     // platform speed range, in pixels per second
     platformSpeedRange: [300, 300],
 
